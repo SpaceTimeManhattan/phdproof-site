@@ -23,7 +23,7 @@ video{width:100%;height:auto;display:block;background:#000}
 <img src="logo/logo_dark.svg" alt="PhDproof.com — powered by UFS">
 </picture>
 <div class="wrap">
-<video id="v" src="intro.mp4" autoplay muted playsinline loop preload="auto"></video>
+<video id="v" src="intro.mp4" muted playsinline loop preload="metadata"></video>
 <button id="snd" type="button" aria-label="Tap for sound">🔊 Tap for sound</button>
 </div>
 </main>
@@ -238,5 +238,18 @@ video{width:100%;height:auto;display:block;background:#000}
 const v=document.getElementById('v'),b=document.getElementById('snd');
 b.onclick=()=>{v.muted=false;v.currentTime=0;v.controls=true;v.play();b.remove();};
 </script>
-</body>
+<script>
+/*viewport-video-play*/
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var vids=document.querySelectorAll("video");
+  function go(v){if(reduce)return;var p=v.play();if(p&&p.catch)p.catch(function(){});}
+  if("IntersectionObserver"in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting)go(e.target);else e.target.pause();});
+    },{threshold:0.35});
+    vids.forEach(function(v){io.observe(v);});
+  }
+})();
+</script></body>
 </html>
